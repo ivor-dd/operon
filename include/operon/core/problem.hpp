@@ -47,7 +47,7 @@ public:
     auto Margin(std::string const& mgn) -> Problem& {
         auto var = dataset_.GetVariable(mgn);
         if (!var.has_value()) {
-            throw std::runtime_error(fmt::format("Error: the target name {} does not exist in the dataset.\n", tgt));
+            throw std::runtime_error(fmt::format("Error: the target name {} does not exist in the dataset.\n", mgn));
         }
         margin_ = var.value();
         return *this;

@@ -71,7 +71,7 @@ add_library(
     source/operators/selector/proportional.cpp
     source/operators/selector/tournament.cpp
 )
-add_library(operon::operon ALIAS operon_operon include/operon/error_metrics/margin_error.hpp)
+add_library(operon::operon ALIAS operon_operon)
 
 # ---- Required dependencies ----
 

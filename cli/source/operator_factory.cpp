@@ -113,7 +113,10 @@ auto ParseErrorMetric(std::string const& str) -> std::tuple<std::unique_ptr<Erro
         error = std::make_unique<Operon::RMSE>();
     } else if (str == "mae") {
         error = std::make_unique<Operon::MAE>();
-    } else {
+    } else if (str == "margin") {
+        error = std::make_unique<Operon::MARGIN>();
+    }
+    else {
         throw std::runtime_error(fmt::format("Unknown metric {}\n", str));
     }
     return std::make_tuple(std::move(error), scale);
