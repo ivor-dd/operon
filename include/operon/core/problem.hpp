@@ -113,6 +113,7 @@ public:
 
     [[nodiscard]]  auto InputVariables() const -> Operon::Span<const Variable> { return inputVariables_; }
     auto TargetValues() -> Operon::Span<const Operon::Scalar> { return dataset_.GetValues(target_.Hash); }
+    auto MarginValues() -> Operon::Span<const Operon::Scalar> { return dataset_.GetValues(margin_.Hash); }
 
     void StandardizeData(Range range)
     {
