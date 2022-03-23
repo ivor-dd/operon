@@ -458,6 +458,7 @@ using std::sinh;
 using std::sqrt;
 using std::tan;
 using std::tanh;
+using std::tgamma;
 
 // MSVC (up to 1930) defines quiet comparison functions as template functions
 // which causes compilation errors due to ambiguity in the template parameter
@@ -722,6 +723,13 @@ inline Jet<T, N> hypot(const Jet<T, N>& x, const Jet<T, N>& y) {
   // d/dy sqrt(x^2 + y^2) = y / sqrt(x^2 + y^2)
   const T tmp = hypot(x.a, y.a);
   return Jet<T, N>(tmp, x.a / tmp * x.v + y.a / tmp * y.v);
+}
+
+// gamma(x + h) ~= gamma(x) * (log(x) - (1 / (2 * x))) * h
+template <typename T, int N>
+inline Jet<T, N> tgamma(const Jet<T, N>& f) {
+    const T derivative = tgamma(f.a) * (log(f.a) - (T(1) / (T(2) * f.a)));
+    return Jet<T, N>(tgamma(f.a), f.v * derivative);
 }
 
 #ifdef CERES_HAS_CPP17

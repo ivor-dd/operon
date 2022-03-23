@@ -170,7 +170,8 @@ namespace Operon
     struct Function<NodeType::Log1p>
     {
         template<typename R, typename T>
-        inline void operator()(R r, T t) { r = t.log1p(); }
+        // inline void operator()(R r, T t) { r = t.log1p(); }
+        inline void operator()(R r, T t) { r = t.unaryExpr([](typename T::Scalar const& v) { return ceres::tgamma(v); }); }
     };
 
     template<>

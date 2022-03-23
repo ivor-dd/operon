@@ -28,37 +28,50 @@ struct OPERON_EXPORT ErrorMetric {
     auto operator=(ErrorMetric&&) -> ErrorMetric& = default;
 
     virtual auto operator()(Operon::Span<Operon::Scalar const> estimated, Operon::Span<Operon::Scalar const> target) const noexcept -> double = 0;
+    virtual auto operator()(Operon::Span<Operon::Scalar const> estimated, Operon::Span<Operon::Scalar const> target, Operon::Span<Operon::Scalar const> margin) const noexcept -> double = 0;
     virtual auto operator()(Iterator beg1, Iterator end1, Iterator beg2) const noexcept -> double = 0;
     virtual ~ErrorMetric() = default;
 };
 
 struct OPERON_EXPORT MSE : public ErrorMetric {
     auto operator()(Operon::Span<Operon::Scalar const> estimated, Operon::Span<Operon::Scalar const> target) const noexcept -> double override;
+    auto operator()(Operon::Span<Operon::Scalar const> estimated, Operon::Span<Operon::Scalar const> target, Operon::Span<Operon::Scalar const> margin) const noexcept -> double override;
     auto operator()(Iterator beg1, Iterator end1, Iterator beg2) const noexcept -> double override;
 };
 
 struct OPERON_EXPORT NMSE : public ErrorMetric {
     auto operator()(Operon::Span<Operon::Scalar const> estimated, Operon::Span<Operon::Scalar const> target) const noexcept -> double override;
+    auto operator()(Operon::Span<Operon::Scalar const> estimated, Operon::Span<Operon::Scalar const> target, Operon::Span<Operon::Scalar const> margin) const noexcept -> double override;
     auto operator()(Iterator beg1, Iterator end1, Iterator beg2) const noexcept -> double override;
 };
 
 struct OPERON_EXPORT RMSE : public ErrorMetric {
     auto operator()(Operon::Span<Operon::Scalar const> estimated, Operon::Span<Operon::Scalar const> target) const noexcept -> double override;
+    auto operator()(Operon::Span<Operon::Scalar const> estimated, Operon::Span<Operon::Scalar const> target, Operon::Span<Operon::Scalar const> margin) const noexcept -> double override;
     auto operator()(Iterator beg1, Iterator end1, Iterator beg2) const noexcept -> double override;
 };
 
 struct OPERON_EXPORT MAE : public ErrorMetric {
     auto operator()(Operon::Span<Operon::Scalar const> estimated, Operon::Span<Operon::Scalar const> target) const noexcept -> double override;
+    auto operator()(Operon::Span<Operon::Scalar const> estimated, Operon::Span<Operon::Scalar const> target, Operon::Span<Operon::Scalar const> margin) const noexcept -> double override;
     auto operator()(Iterator beg1, Iterator end1, Iterator beg2) const noexcept -> double override;
 };
 
 struct OPERON_EXPORT R2 : public ErrorMetric {
     auto operator()(Operon::Span<Operon::Scalar const> estimated, Operon::Span<Operon::Scalar const> target) const noexcept -> double override;
+    auto operator()(Operon::Span<Operon::Scalar const> estimated, Operon::Span<Operon::Scalar const> target, Operon::Span<Operon::Scalar const> margin) const noexcept -> double override;
     auto operator()(Iterator beg1, Iterator end1, Iterator beg2) const noexcept -> double override;
 };
 
 struct OPERON_EXPORT C2 : public ErrorMetric {
     auto operator()(Operon::Span<Operon::Scalar const> estimated, Operon::Span<Operon::Scalar const> target) const noexcept -> double override;
+    auto operator()(Operon::Span<Operon::Scalar const> estimated, Operon::Span<Operon::Scalar const> target, Operon::Span<Operon::Scalar const> margin) const noexcept -> double override;
+    auto operator()(Iterator beg1, Iterator end1, Iterator beg2) const noexcept -> double override;
+};
+
+struct OPERON_EXPORT MARGIN : public ErrorMetric {
+    auto operator()(Operon::Span<Operon::Scalar const> estimated, Operon::Span<Operon::Scalar const> target) const noexcept -> double override;
+    auto operator()(Operon::Span<Operon::Scalar const> estimated, Operon::Span<Operon::Scalar const> target, Operon::Span<Operon::Scalar const> margin) const noexcept -> double override;
     auto operator()(Iterator beg1, Iterator end1, Iterator beg2) const noexcept -> double override;
 };
 

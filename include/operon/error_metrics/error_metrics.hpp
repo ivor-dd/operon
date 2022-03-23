@@ -9,6 +9,7 @@
 #include "operon/error_metrics/r2_score.hpp"
 #include "operon/error_metrics/correlation_coefficient.hpp"
 #include "operon/error_metrics/mean_absolute_error.hpp"
+#include "operon/error_metrics/margin_error.hpp"
 
 #endif
 

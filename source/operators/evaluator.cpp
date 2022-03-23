@@ -20,6 +20,11 @@ namespace Operon {
         return MeanSquaredError(beg1, end1, beg2);
     }
 
+    auto MSE::operator()(Operon::Span<Operon::Scalar const> estimated, Operon::Span<Operon::Scalar const> target, Operon::Span<Operon::Scalar const> margin) const noexcept -> double
+    {
+        return 0.0;
+    }
+
     auto RMSE::operator()(Operon::Span<Operon::Scalar const> estimated, Operon::Span<Operon::Scalar const> target) const noexcept -> double
     {
         return RootMeanSquaredError(estimated.begin(), estimated.end(), target.begin());
@@ -28,6 +33,11 @@ namespace Operon {
     auto RMSE::operator()(Iterator beg1, Iterator end1, Iterator beg2) const noexcept -> double
     {
         return RootMeanSquaredError(beg1, end1, beg2);
+    }
+
+    auto RMSE::operator()(Operon::Span<Operon::Scalar const> estimated, Operon::Span<Operon::Scalar const> target, Operon::Span<Operon::Scalar const> margin) const noexcept -> double
+    {
+        return 0.0;
     }
 
     auto NMSE::operator()(Operon::Span<Operon::Scalar const> estimated, Operon::Span<Operon::Scalar const> target) const noexcept -> double
@@ -40,6 +50,11 @@ namespace Operon {
         return NormalizedMeanSquaredError(beg1, end1, beg2);
     }
 
+    auto NMSE::operator()(Operon::Span<Operon::Scalar const> estimated, Operon::Span<Operon::Scalar const> target, Operon::Span<Operon::Scalar const> margin) const noexcept -> double
+    {
+        return 0.0;
+    }
+
     auto MAE::operator()(Operon::Span<Operon::Scalar const> estimated, Operon::Span<Operon::Scalar const> target) const noexcept -> double
     {
         return MeanAbsoluteError(estimated.begin(), estimated.end(), target.begin());
@@ -48,6 +63,11 @@ namespace Operon {
     auto MAE::operator()(Iterator beg1, Iterator end1, Iterator beg2) const noexcept -> double
     {
         return MeanAbsoluteError(beg1, end1, beg2);
+    }
+
+    auto MAE::operator()(Operon::Span<Operon::Scalar const> estimated, Operon::Span<Operon::Scalar const> target, Operon::Span<Operon::Scalar const> margin) const noexcept -> double
+    {
+        return 0.0;
     }
 
     auto R2::operator()(Operon::Span<Operon::Scalar const> estimated, Operon::Span<Operon::Scalar const> target) const noexcept -> double
@@ -60,6 +80,11 @@ namespace Operon {
         return -R2Score(beg1, end1, beg2);
     }
 
+    auto R2::operator()(Operon::Span<Operon::Scalar const> estimated, Operon::Span<Operon::Scalar const> target, Operon::Span<Operon::Scalar const> margin) const noexcept -> double
+    {
+        return 0.0;
+    }
+
     auto C2::operator()(Operon::Span<Operon::Scalar const> estimated, Operon::Span<Operon::Scalar const> target) const noexcept -> double
     {
         auto r = CorrelationCoefficient(estimated.begin(), estimated.end(), target.begin());
@@ -70,6 +95,26 @@ namespace Operon {
     {
         auto r = CorrelationCoefficient(beg1, end1, beg2);
         return -(r * r);
+    }
+
+    auto C2::operator()(Operon::Span<Operon::Scalar const> estimated, Operon::Span<Operon::Scalar const> target, Operon::Span<Operon::Scalar const> margin) const noexcept -> double
+    {
+        return 0.0;
+    }
+
+    auto MARGIN::operator()(Operon::Span<Operon::Scalar const> estimated, Operon::Span<Operon::Scalar const> target) const noexcept -> double
+    {
+        return 0.0;
+    }
+
+    auto MARGIN::operator()(Iterator beg1, Iterator end1, Iterator beg2) const noexcept -> double
+    {
+        return 0.0;
+    }
+
+    auto MARGIN::operator()(Operon::Span<Operon::Scalar const> estimated, Operon::Span<Operon::Scalar const> target, Operon::Span<Operon::Scalar const> margin) const noexcept -> double
+    {
+        return MarginError(estimated, target, margin);
     }
 
     template<typename T, std::enable_if_t<std::is_arithmetic_v<T>, bool> = true>
@@ -101,6 +146,7 @@ namespace Operon {
 
         auto trainingRange = problem.TrainingRange();
         auto targetValues = dataset.GetValues(problem.TargetVariable()).subspan(trainingRange.Start(), trainingRange.Size());
+        auto marginValues = dataset.GetValues(problem.MarginVariable()).subspan(trainingRange.Start(), trainingRange.Size());
 
         auto computeFitness = [&]() {
             Operon::Vector<Operon::Scalar> estimatedValues;
@@ -114,7 +160,7 @@ namespace Operon {
                 auto [a, b] = FitLeastSquaresImpl<Operon::Scalar>(buf, targetValues);
                 std::transform(buf.begin(), buf.end(), buf.begin(), [a=a,b=b](auto x) { return a * x + b; });
             }
-            return error_(buf.begin(), buf.end(), targetValues.begin());
+            return error_(buf, targetValues, marginValues);
         };
 
         auto const iter = LocalOptimizationIterations();

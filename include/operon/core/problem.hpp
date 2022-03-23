@@ -44,6 +44,15 @@ public:
         return *this;
     }
 
+    auto Margin(std::string const& mgn) -> Problem& {
+        auto var = dataset_.GetVariable(mgn);
+        if (!var.has_value()) {
+            throw std::runtime_error(fmt::format("Error: the target name {} does not exist in the dataset.\n", tgt));
+        }
+        margin_ = var.value();
+        return *this;
+    }
+
     auto Target(Variable const& tgt) -> Problem& {
         auto var = dataset_.GetVariable(tgt.Hash);
         EXPECT(var.has_value());
@@ -96,6 +105,7 @@ public:
     [[nodiscard]] auto ValidationRange() const -> Range { return validation_; }
 
     [[nodiscard]] auto TargetVariable() const -> Variable const& { return target_; }
+    [[nodiscard]] auto MarginVariable() const -> Variable const& { return margin_; }
     [[nodiscard]] auto GetPrimitiveSet() const -> PrimitiveSet const& { return pset_; }
     auto GetPrimitiveSet() -> PrimitiveSet& { return pset_; }
     [[nodiscard]] auto GetDataset() const -> Dataset const& { return dataset_; }
@@ -124,6 +134,7 @@ private:
     Range test_;
     Range validation_;
     Variable target_;
+    Variable margin_;
     std::vector<Variable> inputVariables_;
 };
 } // namespace Operon

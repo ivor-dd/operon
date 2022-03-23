@@ -155,7 +155,7 @@ auto main(int argc, char** argv) -> int
             }
         }
 
-        auto problem = Operon::Problem(*dataset).Inputs(inputs).Target(target).TrainingRange(trainingRange).TestRange(testRange);
+        auto problem = Operon::Problem(*dataset).Inputs(inputs).Target(target).Margin("error_price").TrainingRange(trainingRange).TestRange(testRange);
         problem.GetPrimitiveSet().SetConfig(primitiveSetConfig);
 
         std::unique_ptr<Operon::CreatorBase> creator;
