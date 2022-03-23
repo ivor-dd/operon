@@ -23,7 +23,7 @@ inline auto MarginError(InputIt1 begin1, InputIt1 end1, InputIt2 begin2) noexcep
 }
 
 template<typename T>
-inline auto MeanAbsoluteError(Operon::Span<T const> x, Operon::Span<T const> y) -> double
+inline auto MarginError(Operon::Span<T const> x, Operon::Span<T const> y) -> double
 {
     static_assert(std::is_arithmetic_v<T>, "T must be an arithmetic type.");
     EXPECT(x.size() == y.size());
@@ -39,13 +39,13 @@ inline auto MarginError(Operon::Span<T const> x, Operon::Span<T const> y, Operon
     EXPECT(x.size() > 0);
 
     Operon::Vector<T> error;
-    error.resize(x.Size());
+    error.resize(x.size());
 
     for (std::size_t i = 0; i != x.size(); ++i) {
         if (y[i] <= x[i] && z[i] >= x[i]) {
             error[i] = T(0);
         } else {
-            error[i] = std::abs((b-a)/b);
+            error[i] = std::min(std::abs((y[i]-x[i])/y[i]), std::abs((z[i]-x[i])/z[i])) ;
         }
     }
 
