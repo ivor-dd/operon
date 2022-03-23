@@ -285,8 +285,8 @@ auto main(int argc, char** argv) -> int
             double nmseTest{};
             double maeTrain{};
             double maeTest{};
-            double marginTrain{};
-            double marginTest{};
+            double errorTrain{};
+            double errorTest{};
 
             auto scaleTrain = taskflow.emplace([&]() {
                 Eigen::Map<Eigen::Array<Operon::Scalar, -1, 1>> estimated(estimatedTrain.data(), estimatedTrain.size());
@@ -309,8 +309,8 @@ auto main(int argc, char** argv) -> int
                 maeTrain = Operon::MAE{}(estimatedTrain, targetTrain);
                 maeTest = Operon::MAE{}(estimatedTest, targetTest);
 
-                marginTrain = Operon::MARGIN{}(estimatedTrain, targetTrain, marginTrain);
-                marginTest = Operon::MARGIN{}(estimatedTest, targetTest, marginTest);
+                errorTrain = Operon::MARGIN{}(estimatedTrain, targetTrain, marginTrain);
+                errorTest = Operon::MARGIN{}(estimatedTest, targetTest, marginTest);
             });
 
             double avgLength = 0;
